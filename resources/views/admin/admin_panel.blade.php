@@ -19,7 +19,7 @@
             <input required class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="text" placeholder="Enter pdf" name="pdf">
             <input required class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="text" placeholder="Enter password" name="password">
             <input required class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="text" placeholder="Enter user id" name="user_id">
-            <input required class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="file" name="imageUpload">
+            <input class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="file" name="imageUpload">
             <input class="border border-[#00000050] w-[20%] active:scale-95 bg-[#003366] text-white p-2 rounded-lg outline-[#00000050] cursor-pointer" type="submit" value="Insert image">
         </form>
     </div>

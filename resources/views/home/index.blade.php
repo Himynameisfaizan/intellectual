@@ -15,10 +15,29 @@
     @include('include.header')
 
     <style>
+        @keyframes scrollUp {
+            0% {
+                transform: translateY(100%);
+            }
+
+            100% {
+                transform: translateY(-100%);
+            }
+        }
+
+        .animate-scroll-up {
+            animation: scrollUp 15s linear infinite;
+        }
+
+        .animate-scroll-up:hover {
+            animation-play-state: paused;
+        }
+
         @keyframes move-rtl {
             from {
                 transform: translateX(100%);
             }
+
             to {
                 transform: translateX(-100%);
             }
@@ -60,10 +79,26 @@
 
             <div class="w-full lg:w-3/5 relative rounded-xl overflow-hidden shadow-2xl bg-gray-200 group aspect-video lg:aspect-auto">
                 <div class="slider-track flex transition-transform duration-500 ease-out h-full" id="slider-track">
-                    @foreach ($imagePaths as $img)
-                    <div class="min-w-full h-full">
-                        <img src="{{ $img }}" alt="Slide" class="w-full h-full object-cover">
+                    @foreach ($imagePaths as $mediaUrl)
+
+                    {{-- Ab yaha check karne ki zaroorat nahi hai ki empty hai ya nahi,
+             kyunki Controller ne pehle hi saaf kar diya hai --}}
+
+                    @php
+                    $extension = pathinfo($mediaUrl, PATHINFO_EXTENSION);
+                    $isVideo = in_array(strtolower($extension), ['mp4', 'mov', 'avi', 'webm']);
+                    @endphp
+
+                    <div class="min-w-full h-full relative">
+                        @if($isVideo)
+                        <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+                            <source src="{{ $mediaUrl }}" type="video/{{ $extension }}">
+                        </video>
+                        @else
+                        <img src="{{ $mediaUrl }}" alt="Slide" class="w-full h-full object-cover">
+                        @endif
                     </div>
+
                     @endforeach
                 </div>
 

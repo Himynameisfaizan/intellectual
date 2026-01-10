@@ -11,27 +11,36 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function index()
-    {
-        // Django: New_Project.objects.order_by('-id')
-        $lastToOne = NewProject::orderBy('id', 'desc')->get();
+{
+    // 1. Projects ki list (Django logic same)
+    $lastToOne = NewProject::orderBy('id', 'desc')->get();
+    $grouped = $lastToOne->chunk(3);
 
-        // Chunk logic for grouping (Django mein manually loop lagaya tha)
-        $grouped = $lastToOne->chunk(3);
+    // 2. Slider ka Data fetch karo
+    $pdfLastToOne = PdfDetail::where('is_delete', 1)
+        ->orderBy('id', 'desc')
+        ->take(5)
+        ->get();
 
-        // Django: Pdf_Detail.objects.order_by('-id')[5:] -> Logic thoda alag hai yaha
-        // Assuming you want the latest 5 for slider/images
-        $pdfLastToOne = PdfDetail::where('is_delete', 1)
-            ->orderBy('id', 'desc')
-            ->take(5)
-            ->get();
+    // 3. MAIN LOGIC CHANGE YAHAN HAI:
+    $imagePaths = $pdfLastToOne
+        // Step A: Pehle check karo ki image_url khali to nahi hai?
+        ->filter(function ($item) {
+            return !empty($item->image_url); 
+        })
+        // Step B: Ab bache hue items ka URL banao
+        ->map(function ($item) {
+            // Agar path already full URL hai to asset mat lagao (Safety check)
+            if (filter_var($item->image_url, FILTER_VALIDATE_URL)) {
+                return $item->image_url;
+            }
+            return asset($item->image_url);
+        })
+        // Step C: Array ki ginti (keys) reset karo (Zaroori hai slider ke liye)
+        ->values(); 
 
-        // Image paths (Laravel Storage link use karega)
-        $imagePaths = $pdfLastToOne->map(function ($item) {
-            return asset('storage/' . $item->image_url);
-        });
-
-        return view('home.index', compact('imagePaths', 'grouped', 'pdfLastToOne'));
-    }
+    return view('home.index', compact('imagePaths', 'grouped', 'pdfLastToOne'));
+}
 
     public function about()
     {

@@ -15,10 +15,28 @@ class AdminController extends Controller
     public function insert(Request $request)
     {
         $request->validate([
-            'imageUpload' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imageUpload' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4,mov,avi|max:20480',
+            'approved_project' => 'required',
+            'pdf' => 'required',
+            'password' => 'required',
+            'user_id' => 'required',
         ]);
-        
-        $path = $request->file('imageUpload')->store('banner', 'public');
+
+        $path = null;
+
+        if ($request->hasFile('imageUpload')) {
+            $file = $request->file('imageUpload');
+
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $destinationPath = $_SERVER['DOCUMENT_ROOT'] . '/banner';
+
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+
+            $file->move($destinationPath, $filename);
+            $path = 'banner/' . $filename;
+        }
 
         PdfDetail::create([
             'image_url' => $path,
@@ -28,6 +46,6 @@ class AdminController extends Controller
             'user_id' => $request->user_id,
         ]);
 
-        return redirect()->back()->with('success');
+        return redirect()->back()->with('success', 'Data added successfully!');
     }
 }

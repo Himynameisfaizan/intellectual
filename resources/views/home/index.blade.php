@@ -15,50 +15,43 @@
     @include('include.header')
 
     <style>
-        /* CSS animations same rahengi */
-        @keyframes scrollUp {
-            0% {
-                transform: translateY(100%);
+        @keyframes move-rtl {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(-100%);
             }
 
-            100% {
-                transform: translateY(-100%);
+        }
+
+        @keyframes move-ltr {
+            from {
+                transform: translateX(-100%);
             }
+
+            to {
+                transform: translateX(100%);
+            }
+
         }
 
-        .animate-scroll-up {
-            animation: scrollUp 15s linear infinite;
+        .bounce-text {
+            display: inline-block;
+            white-space: nowrap;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
         }
 
-        .animate-scroll-up:hover {
+        .bounce-text:hover {
             animation-play-state: paused;
         }
 
-        .new-update-title:hover {
-            animation-play-state: paused;
-        }
-
-        @keyframes scrollLeft {
-            0% {
-                transform: translateX(50%);
-            }
-
-            100% {
-                transform: translateX(0%);
-            }
-        }
-
-        .animate-scroll-left {
-            animation: scrollLeft 10s linear infinite alternate;
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .scroll-container {
+            overflow: hidden;
+            width: 100%;
+            position: relative;
         }
     </style>
 
@@ -111,14 +104,33 @@
             <h1 class="text-3xl font-bold text-[#003366] text-center mb-8 font-sans">New Updates</h1>
             <div class="relative max-w-6xl m-auto overflow-hidden">
                 <div class="new-update-title whitespace-nowrap animate-scroll-left flex gap-2 items-center">
-                    @foreach ($grouped as $group)
-                    @foreach ($group as $update)
-                    <p class="inline-block text-gray-800 cursor-pointer hover:text-red-600 font-medium transition py-2  last:border-0 border-gray-400">
-                        {{ $update->new_update }}
-                    </p>
-                    @if (!$loop->last) || @endif
-                    @endforeach
-                    @endforeach
+                    <div class="flex flex-col gap-4 w-full text-center overflow-hidden">
+                        @foreach ($grouped as $chunk)
+                        @php
+                        $animationName = $loop->iteration % 2 == 0 ? 'move-ltr' : 'move-rtl';
+                        $speed = rand(8, 10) . 's';
+                        @endphp
+
+                        <div class="scroll-container">
+                            <div class="bounce-text"
+                                style="animation-name: {{ $animationName }}; animation-duration: {{ $speed }};">
+
+                                @foreach ($chunk as $item)
+                                <span class="text-sm md:text-base cursor-pointer text-gray-800 hover:text-gray-500 font-medium px-2">
+                                    {{ $item->approved_projects ?? $item->new_update ?? 'Update Title' }}
+                                </span>
+
+                                {{-- Separator (||) --}}
+                                @if (!$loop->last)
+                                <span class="mx-2 text-blue-900 font-bold">||</span>
+                                @endif
+                                @endforeach
+
+                            </div>
+                        </div>
+
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>

@@ -16,7 +16,7 @@
 
     <main class="relative w-full max-w-6xl mx-auto px-6 py-12 md:py-16 flex flex-col items-center justify-center min-h-[100vh] lg-[60vh]
     mt-10">
-        <section id="projectDetail" class="bg-[#fefefe] max-w-[500px] mx-auto w-full border border-neutral-300 rounded-lg shadow-lg ">
+        <section id="projectDetail" class="bg-[#fefefe] max-w-[500px] mx-auto w-full border border-neutral-300 rounded-lg shadow-lg hidden">
             <form class="flex flex-col gap-7 px-8 pb-10 pt-5" onsubmit="projectDetailForm()">
                 <h3 class="text-center font-medium text-2xl mb-5">Approved project detail</h3>
                 <div class="flex flex-col gap-1">
@@ -49,7 +49,7 @@
         </section>
 
         <section id="adminView" class="absolute bg-[#fefefe] max-w-[400px] mx-auto w-full border border-neutral-300 rounded-lg shadow-lg top-[50%] left-[50%]
-        -translate-y-[50%] -translate-x-[50%] transition-all duration-400 hidden">
+        -translate-y-[50%] -translate-x-[50%] transition-all duration-400 ">
             <form class="flex flex-col gap-7 px-8 pb-10 pt-5" onsubmit="showPopup();">
                 <h3 class="text-center font-medium text-2xl mb-5">Admin Verify</h3>
                 <div class="flex flex-col gap-1">

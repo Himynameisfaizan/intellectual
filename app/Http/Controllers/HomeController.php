@@ -126,4 +126,8 @@ class HomeController extends Controller
     public function test(){
         return view('home.test');
     }
+
+    public function pdf(){
+        return view('home.pdf');
+    }
 }

@@ -20,6 +20,7 @@
         <div class="hidden md:flex items-center gap-8">
             <nav class="flex gap-6">
                 <a href="{{ route('index') }}" class="text-white hover:text-yellow-400 text-[15px] font-medium transition duration-300">Home</a>
+                <a href="{{ route('pdf') }}" class="text-white hover:text-yellow-400 text-[15px] font-medium transition duration-300">Pdf</a>
                 <a href="{{ route('about-us') }}" class="text-white hover:text-yellow-400 text-[15px] font-medium transition duration-300">About-us</a>
                 <a href="{{ route('certificate') }}" class="text-white hover:text-yellow-400 text-[15px] font-medium transition duration-300">Certificate</a>
             </nav>
@@ -42,6 +43,9 @@
         <ul class="flex flex-col items-center py-4 space-y-4 border-t border-[#0055aa]">
             <li class="w-full text-center hover:bg-[#003366] py-2">
                 <a href="{{ route('index') }}" class="block w-full text-lg">Home</a>
+            </li>
+            <li class="w-full text-center hover:bg-[#003366] py-2">
+                <a href="{{ route('index') }}" class="block w-full text-lg">Approved</a>
             </li>
             <li class="w-full text-center hover:bg-[#003366] py-2">
                 <a href="{{ route('about-us') }}" class="block w-full text-lg">About</a>

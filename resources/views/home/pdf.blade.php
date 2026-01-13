@@ -16,28 +16,58 @@
 
     <main class="relative w-full max-w-6xl mx-auto px-6 py-12 md:py-16 flex flex-col items-center justify-center min-h-[100vh] lg-[60vh]
     mt-10">
-        <section id="projectDetail" class="bg-[#fefefe] max-w-[500px] mx-auto w-full border border-neutral-300 rounded-lg shadow-lg hidden">
+        <section id="projectDetail" class="bg-[#fefefe] max-w-2xl mx-auto w-full border border-neutral-300 rounded-lg shadow-lg ">
             <form class="flex flex-col gap-7 px-8 pb-10 pt-5" onsubmit="projectDetailForm()">
                 <h3 class="text-center font-medium text-2xl mb-5">Approved project detail</h3>
                 <div class="flex flex-col gap-1">
-                    <label for="" class="font-medium text-sm">project name<span class="text-rose-500 font-medium">*</span></label>
-                    <input type="text" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
+                    <label for="projectName" class="font-medium text-sm">Pdf name<span class="text-rose-500 font-medium">*</span></label>
+                    <input type="text" id="projectName" name="projectName" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
+                    transition-all duration-200" required>
+                </div>
+                <div class="flex gap-1">
+                    <div class="basis-1/2 flex flex-col gap-1">
+                        <label for="clientName" class="font-medium text-sm">Client name<span class="text-rose-500 font-medium">*</span></label>
+                        <input type="text" id="clientName" name="clientName" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
+                        transition-all duration-200" required>
+                    </div>
+                    <div class="basis-1/2 flex flex-col gap-1">
+                        <label for="date" class="font-medium text-sm">Date<span class="text-rose-500 font-medium">*</span></label>
+                        <input type="date" id="date" name="date" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
+                        transition-all duration-200" required>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label for="gst" class="font-medium text-sm">Logo name with GST<span class="text-rose-500 font-medium">*</span></label>
+                    <input type="text" id="gst" name="gst" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
+                    transition-all duration-200" required>
+                </div>
+                <div class="flex  gap-1 justify-between items-center">
+                    <div class="w-[50%] flex flex-col">
+                        <label for="pdf" class="font-medium text-sm">Pdf<span class="text-rose-500 font-medium">*</span></label>
+                        <input type="file" id="pdf" name="pdf" accept="application/pdf" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
+                        transition-all duration-200" required>
+                    </div>
+                    <div class="w-[50%] flex flex-col">
+                        <label for="logo" class="font-medium text-sm">Logo<span class="text-rose-500 font-medium">*</span></label>
+                        <input type="file" id="logo" name="logo" accept="image/png, image/jpeg, image/jpg" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
+                        transition-all duration-200" required>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label for="address" class="font-medium text-sm">Address<span class="text-rose-500 font-medium">*</span></label>
+                    <textarea name="address" id="address" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
+                    transition-all duration-200"></textarea>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <label for="userId" class="font-medium text-sm">User-id<span class="text-rose-500 font-medium">*</span></label>
+                    <input type="text" id="userId" name="userId" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
                     transition-all duration-200" required>
                 </div>
                 <div class="flex flex-col gap-1">
-                    <label for="" class="font-medium text-sm">pdf<span class="text-rose-500 font-medium">*</span></label>
-                    <input type="file" accept="application/pdf" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                    transition-all duration-200" required>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label for="" class="font-medium text-sm">User-id<span class="text-rose-500 font-medium">*</span></label>
-                    <input type="" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                    transition-all duration-200" required>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label for="" class="font-medium text-sm">Password<span class="text-rose-500 font-medium">*</span></label>
+                    <label for="userPassword" class="font-medium text-sm">Password<span class="text-rose-500 font-medium">*</span></label>
                     <div class="flex justify-between gap-1">
-                        <input type="text" id="userPassword" value="" class="border border-neutral-400 rounded py-0.5 pl-2 
+                        <input type="text" id="userPassword" name="userPassword" value="" class="border border-neutral-400 rounded py-0.5 pl-2 
                         focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
                         transition-all duration-200 flex-1" required>
                         <i class="ri-user-settings-line bg-blue-400 px-2 py-1 border-neutral-400 border rounded bg-neutral-100 
@@ -49,7 +79,7 @@
         </section>
 
         <section id="adminView" class="absolute bg-[#fefefe] max-w-[400px] mx-auto w-full border border-neutral-300 rounded-lg shadow-lg top-[50%] left-[50%]
-        -translate-y-[50%] -translate-x-[50%] transition-all duration-400 ">
+        -translate-y-[50%] -translate-x-[50%] transition-all duration-400 hidden">
             <form class="flex flex-col gap-7 px-8 pb-10 pt-5" onsubmit="showPopup();">
                 <h3 class="text-center font-medium text-2xl mb-5">Admin Verify</h3>
                 <div class="flex flex-col gap-1">
@@ -93,7 +123,7 @@
             };
         };
 
-        function projectDetailForm(){
+        function projectDetailForm() {
             event.preventDefault();
 
         }
@@ -112,7 +142,6 @@
 
             userPassword.value = result;
         }
-
     </script>
 </body>
 

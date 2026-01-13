@@ -130,4 +130,8 @@ class HomeController extends Controller
     public function pdf(){
         return view('home.pdf');
     }
+
+    public function certificateform(){
+        return view('home.certificateform');
+    }
 }

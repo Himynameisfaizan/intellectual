@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/pdf', [HomeController::class, 'pdf'])->name('pdf');
+Route::get('/certificateform', [HomeController::class, 'certificateform'])->name('certificateform');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/certificate', [HomeController::class, 'certificate'])->name('certificate');
 Route::get('/test', [HomeController::class, 'test']);

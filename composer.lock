@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "26cb6fff423ee0edff5bec050b76b10f",
+    "content-hash": "65bd46856a3b57a30c68648b81adf064",
     "packages": [
         {
             "name": "brick/math",
@@ -3403,6 +3403,61 @@
                 }
             ],
             "time": "2025-08-05T09:57:14+00:00"
+        },
+        {
+            "name": "setasign/fpdi-protection",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Setasign/fpdi-protection.git",
+                "reference": "51bef22e47ea7ee1a73b6b356b1bd6bf055ccd8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Setasign/fpdi-protection/zipball/51bef22e47ea7ee1a73b6b356b1bd6bf055ccd8d",
+                "reference": "51bef22e47ea7ee1a73b6b356b1bd6bf055ccd8d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": "^5.6 || ^7.0 || ^8.0",
+                "setasign/fpdi": "^2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.7",
+                "setasign/fpdf": "~1.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "setasign\\FpdiProtection\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Slabon",
+                    "email": "jan.slabon@setasign.com",
+                    "homepage": "https://www.setasign.com"
+                }
+            ],
+            "description": "A FPDI compatible version of the FPDF_Protection script.",
+            "homepage": "https://github.com/Setasign/fpdi-protection",
+            "keywords": [
+                "fpdf",
+                "fpdi",
+                "password",
+                "pdf",
+                "protection"
+            ],
+            "support": {
+                "issues": "https://github.com/Setasign/fpdi-protection/issues",
+                "source": "https://github.com/Setasign/fpdi-protection/tree/v2.0.1"
+            },
+            "time": "2020-12-04T07:27:41+00:00"
         },
         {
             "name": "symfony/clock",

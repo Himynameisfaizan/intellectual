@@ -89,7 +89,7 @@
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-[90%] max-w-md p-6 rounded-lg shadow-2xl border border-gray-200">
 
             <div class="flex flex-col items-center mb-6 relative">
-                <img src="{{ asset('storage/images/IP-Logo-fnl.png') }}" alt="Logo" class="w-12 h-12 object-contain mb-2">
+                <img src="{{ asset('storage/images/IP-Logo-fnl.png') }}" alt="Logo" class="w-30 h-12 object-contain mb-2">
                 <h2 class="text-2xl font-bold text-[#003366]">Download PDF</h2>
                 <p class="text-sm text-gray-500">Simply fill out this form</p>
 

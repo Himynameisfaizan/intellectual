@@ -12,31 +12,24 @@ class HomeController extends Controller
 {
     public function index()
 {
-    // 1. Projects ki list (Django logic same)
     $lastToOne = NewProject::orderBy('id', 'desc')->get();
     $grouped = $lastToOne->chunk(3);
 
-    // 2. Slider ka Data fetch karo
     $pdfLastToOne = PdfDetail::where('is_delete', 1)
         ->orderBy('id', 'desc')
         ->take(5)
         ->get();
 
-    // 3. MAIN LOGIC CHANGE YAHAN HAI:
     $imagePaths = $pdfLastToOne
-        // Step A: Pehle check karo ki image_url khali to nahi hai?
         ->filter(function ($item) {
             return !empty($item->image_url); 
         })
-        // Step B: Ab bache hue items ka URL banao
         ->map(function ($item) {
-            // Agar path already full URL hai to asset mat lagao (Safety check)
             if (filter_var($item->image_url, FILTER_VALIDATE_URL)) {
                 return $item->image_url;
             }
             return asset($item->image_url);
         })
-        // Step C: Array ki ginti (keys) reset karo (Zaroori hai slider ke liye)
         ->values(); 
 
     return view('home.index', compact('imagePaths', 'grouped', 'pdfLastToOne'));
@@ -49,7 +42,6 @@ class HomeController extends Controller
 
     public function certificate()
     {
-        // Using Raw SQL for Modulo operator like in Django
         $oddRows = PdfDetail::whereRaw('id % 2 = 1')
             ->where('is_delete', 1)
             ->whereNotNull('pdf')
@@ -60,7 +52,6 @@ class HomeController extends Controller
             ->whereNotNull('pdf')
             ->get(['id', 'approved_projects']);
 
-        // Data formatting logic
         $oddName = [];
         $sno = 1;
         foreach ($oddRows as $row) {
@@ -68,7 +59,6 @@ class HomeController extends Controller
         }
 
         $evenName = [];
-        // Sno continues from odd count
         $sno = count($oddName) + 1;
         foreach ($evenRows as $row) {
             $evenName[] = ['sno' => $sno++, 'id' => $row->id, 'approved_projects' => $row->approved_projects];
@@ -91,7 +81,6 @@ class HomeController extends Controller
                     'phone_no' => $request->input('phone'),
                 ]);
             } catch (\Exception $e) {
-                // Ignore if duplicate phone/user mainly
             }
 
             return response()->json([
@@ -114,12 +103,6 @@ class HomeController extends Controller
 
         $filePath = storage_path('app/public/' . $pdfDetail->pdf);
         $password = $pdfDetail->password;
-
-        // NOTE: PHP native libraries like FPDF/FPDI cannot easily ENCRYPT existing PDFs 
-        // without paid addons or complex workarounds like TCPDF.
-        // For now, I am serving the file directly. 
-        // Agar encryption compulsory hai, toh humein 'tecnickcom/tcpdf' use karna padega.
-
         return response()->download($filePath, $pdfDetail->approved_projects . '.pdf');
     }
 
@@ -127,11 +110,4 @@ class HomeController extends Controller
         return view('home.test');
     }
 
-    public function pdf(){
-        return view('home.pdf');
-    }
-
-    public function certificateform(){
-        return view('home.certificateform');
-    }
 }

@@ -8,14 +8,13 @@
 
 </head>
 <body>
-    <main class=" w-[100wh] h-[100vh]">
+    <main class=" w-[100wh] h-screen">
        <section class="w-full h-full" style="
         background-image: url('{{ asset('storage/images/certificate.jpg') }}'); 
         background-repeat: no-repeat;
         background-size: contain;
         background-position:center;
-        "
-        ></section> 
+        "></section> 
     </main>
 </body>
 </html>

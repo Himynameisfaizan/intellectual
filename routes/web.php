@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/pdf', [HomeController::class, 'pdf'])->name('pdf');
-Route::get('/certificateform', [HomeController::class, 'certificateform'])->name('certificateform');
+Route::get('/pdf', [IntellatualController::class, 'pdf'])->name('pdf');
+Route::post('/generate-pdf', [IntellatualController::class, 'generate'])->name('pdf.generate');
+Route::get('/certificateform', [IntellatualController::class, 'certificateform'])->name('certificateform');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/certificate', [HomeController::class, 'certificate'])->name('certificate');
 Route::get('/test', [HomeController::class, 'test']);
@@ -24,3 +25,4 @@ Route::get('/download/{user_id}', [HomeController::class, 'downloadPdf'])->name(
 
 Route::get('admin', [AdminController::class, 'index']);
 Route::post('admin', [AdminController::class, 'insert']);
+

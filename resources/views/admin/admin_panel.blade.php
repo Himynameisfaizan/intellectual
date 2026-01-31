@@ -16,7 +16,7 @@
         <form class="flex flex-col gap-5" action="admin" method="post" enctype="multipart/form-data">
             @csrf
             <input required class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="text" placeholder="Enter approved project" name="approved_project">
-            <input required class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="text" placeholder="Enter pdf" name="pdf">
+            <input required class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="file" placeholder="Enter pdf" name="pdf">
             <input required class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="text" placeholder="Enter password" name="password">
             <input required class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="text" placeholder="Enter user id" name="user_id">
             <input class="border border-[#00000050] p-2 rounded-lg outline-[#00000050] cursor-pointer" type="file" name="imageUpload">

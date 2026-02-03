@@ -10,12 +10,8 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/pdf', [IntellatualController::class, 'pdf'])->name('pdf');
-Route::post('/generate-pdf', [IntellatualController::class, 'generate'])->name('pdf.generate');
-Route::get('/certificateform', [IntellatualController::class, 'certificateform'])->name('certificateform');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/certificate', [HomeController::class, 'certificate'])->name('certificate');
-Route::get('/test', [HomeController::class, 'test']);
 
 // API/Action Routes
 Route::post('/check-userid', [HomeController::class, 'checkUserId'])->name('check_userId');
@@ -23,6 +19,10 @@ Route::get('/download/{user_id}', [HomeController::class, 'downloadPdf'])->name(
 
 // admin
 
-Route::get('admin', [AdminController::class, 'index']);
+Route::get('/admin', [AdminController::class, 'index']);
 Route::post('admin', [AdminController::class, 'insert']);
+Route::get('/admin/pdf-generator', [AdminController::class, 'pdf'])->name('pdf');
+Route::post('/generate-pdf', [AdminController::class, 'generate'])->name('pdf.generate');
+Route::get("/admin/home-details", [AdminController::class, "home_details"]);
+Route::get('/admin/new-project-details', [AdminController::class, 'new_project_details']);
 

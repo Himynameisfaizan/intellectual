@@ -11,60 +11,33 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function index()
-{
-    $lastToOne = NewProject::orderBy('id', 'desc')->get();
-    $grouped = $lastToOne->chunk(3);
+    {
+        $lastToOne = NewProject::orderBy('id', 'desc')->get();
+        $grouped = $lastToOne->chunk(3);
 
-    $pdfLastToOne = PdfDetail::where('is_delete', 1)
-        ->orderBy('id', 'desc')
-        ->take(5)
-        ->get();
+        $pdfLastToOne = PdfDetail::where('is_delete', 1)
+            ->orderBy('id', 'desc')
+            ->take(5)
+            ->get();
 
-    $imagePaths = $pdfLastToOne
-        ->filter(function ($item) {
-            return !empty($item->image_url); 
-        })
-        ->map(function ($item) {
-            if (filter_var($item->image_url, FILTER_VALIDATE_URL)) {
-                return $item->image_url;
-            }
-            return asset($item->image_url);
-        })
-        ->values(); 
+        $imagePaths = $pdfLastToOne
+            ->filter(function ($item) {
+                return !empty($item->image_url);
+            })
+            ->map(function ($item) {
+                if (filter_var($item->image_url, FILTER_VALIDATE_URL)) {
+                    return $item->image_url;
+                }
+                return asset($item->image_url);
+            })
+            ->values();
 
-    return view('home.index', compact('imagePaths', 'grouped', 'pdfLastToOne'));
-}
+        return view('home.index', compact('imagePaths', 'grouped', 'pdfLastToOne'));
+    }
 
     public function about()
     {
         return view('home.about');
-    }
-
-    public function certificate()
-    {
-        $oddRows = PdfDetail::whereRaw('id % 2 = 1')
-            ->where('is_delete', 1)
-            ->whereNotNull('pdf')
-            ->get(['id', 'approved_projects']);
-
-        $evenRows = PdfDetail::whereRaw('id % 2 = 0')
-            ->where('is_delete', 1)
-            ->whereNotNull('pdf')
-            ->get(['id', 'approved_projects']);
-
-        $oddName = [];
-        $sno = 1;
-        foreach ($oddRows as $row) {
-            $oddName[] = ['sno' => $sno++, 'id' => $row->id, 'approved_projects' => $row->approved_projects];
-        }
-
-        $evenName = [];
-        $sno = count($oddName) + 1;
-        foreach ($evenRows as $row) {
-            $evenName[] = ['sno' => $sno++, 'id' => $row->id, 'approved_projects' => $row->approved_projects];
-        }
-
-        return view('home.certificate', compact('oddName', 'evenName'));
     }
 
     public function checkUserId(Request $request)
@@ -73,7 +46,6 @@ class HomeController extends Controller
 
         if (PdfDetail::where('user_id', $userId)->exists()) {
 
-            // Save User Data
             try {
                 UserData::create([
                     'user_id' => $userId,
@@ -106,8 +78,30 @@ class HomeController extends Controller
         return response()->download($filePath, $pdfDetail->approved_projects . '.pdf');
     }
 
-    public function test(){
-        return view('home.test');
-    }
+    public function certificate()
+    {
+        $oddRows = PdfDetail::whereRaw('id % 2 = 1')
+            ->where('is_delete', 1)
+            ->whereNotNull('pdf')
+            ->get(['id', 'approved_projects']);
 
+        $evenRows = PdfDetail::whereRaw('id % 2 = 0')
+            ->where('is_delete', 1)
+            ->whereNotNull('pdf')
+            ->get(['id', 'approved_projects']);
+
+        $oddName = [];
+        $sno = 1;
+        foreach ($oddRows as $row) {
+            $oddName[] = ['sno' => $sno++, 'id' => $row->id, 'approved_projects' => $row->approved_projects];
+        }
+
+        $evenName = [];
+        $sno = count($oddName) + 1;
+        foreach ($evenRows as $row) {
+            $evenName[] = ['sno' => $sno++, 'id' => $row->id, 'approved_projects' => $row->approved_projects];
+        }
+
+        return view('home.certificate', compact('oddName', 'evenName'));
+    }
 }

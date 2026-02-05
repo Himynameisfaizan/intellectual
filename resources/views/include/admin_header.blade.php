@@ -29,12 +29,14 @@
         <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden"></div>
 
         <aside :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
-            class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-[#003366] lg:translate-x-0 lg:static lg:inset-0">
+            class="fixed h-screen inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-[#003366] lg:translate-x-0 lg:static lg:inset-0">
 
             <div class="flex items-center justify-center h-16 bg-[#002855] border-b border-[#ffffff20]">
-                <div class="text-white text-2xl font-bold flex items-center gap-2">
-                    <img class="w-8 h-8 object-contain" src="/storage/images/it.png" alt="">
-                    AdminPanel
+                <div class="text-white text-2xl font-bold flex items-center justify-center">
+                    <a class="flex items-center gap-2" href="{{ url('/admin') }}">
+                        <img class="w-8 h-8 object-contain" src="/storage/images/it.png" alt="">
+                        AdminPanel
+                    </a>
                 </div>
             </div>
 
@@ -68,16 +70,39 @@
         <div class="flex flex-col flex-1 overflow-hidden">
 
             <header class="flex items-center justify-end px-6 py-4 bg-white shadow-sm h-16">
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2 cursor-pointer">
-                        <img class="w-8 h-8 rounded-full object-cover border border-gray-300" src="https://ui-avatars.com/api/?name=Admin+User&background=003366&color=fff" alt="User avatar">
-                        <span class="hidden md:block text-sm font-medium text-gray-700">Admin User</span>
-                    </div>
+
+                {{-- Sirf login user ko dikhega --}}
+                @auth
+                <div class="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-md">
+                    <i class="ri-user-follow-line text-[#003366]"></i>
+                    <span class="font-medium text-gray-700">Welcome, {{ Auth::user()->name }}</span>
                 </div>
+
+                <div class="px-4 py-2">
+                    <button onclick="confirmLogout()"
+                        class="flex items-center gap-3 w-full px-4 py-1.5 text-red-600 cursor-pointer bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200 font-medium">
+                        <i class="ri-logout-box-r-line text-xl"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                    @csrf
+                </form>
+                @endauth
+
             </header>
 
         </div>
     </div>
+
+    <script>
+        function confirmLogout() {
+            if (confirm("Are you really want to logout?")) {
+                document.getElementById('logout-form').submit();
+            }
+        }
+    </script>
 
 </body>
 

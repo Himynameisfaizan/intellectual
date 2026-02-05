@@ -19,10 +19,26 @@ Route::get('/download/{user_id}', [HomeController::class, 'downloadPdf'])->name(
 
 // admin
 
-Route::get('/admin', [AdminController::class, 'index']);
-Route::post('admin', [AdminController::class, 'insert']);
-Route::get('/admin/pdf-generator', [AdminController::class, 'pdf'])->name('pdf');
-Route::post('/generate-pdf', [AdminController::class, 'generate'])->name('pdf.generate');
-Route::get("/admin/home-details", [AdminController::class, "home_details"]);
-Route::get('/admin/new-project-details', [AdminController::class, 'new_project_details']);
+// Route::get('/admin', [AdminController::class, 'index']);
+// Route::post('admin/home-details', [AdminController::class, 'insert'])->name("insert");
+// Route::get('/admin/pdf-generator', [AdminController::class, 'pdf'])->name('pdf');
+// Route::post('/generate-pdf', [AdminController::class, 'generate'])->name('pdf.generate');
+// Route::get("/admin/home-details", [AdminController::class, "home_details"]);
 
+
+Route::middleware('guest')->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('login');
+    Route::post('/admin/login', [AdminController::class, 'handleLogin'])->name('admin.login.submit');
+    });
+    
+    // Protected Routes (Login ke baad)
+    Route::middleware('auth')->prefix('admin')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/home-details', [AdminController::class, 'home_details'])->name('home_details');
+        Route::get('/home-details/{id}', [AdminController::class, 'home_details_edit_page'])->name('home_details_edit_page');
+        Route::get('/pdf-generator', [AdminController::class, 'pdf'])->name('pdf');
+        Route::post('/generate-pdf', [AdminController::class, 'generate'])->name('pdf.generate');
+        Route::post('/insert-details', [AdminController::class, 'insert'])->name('insert');
+        Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+        Route::get('/admin/new-project-details', [AdminController::class, 'new_project_details']);
+});

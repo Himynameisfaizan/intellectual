@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PdfDetail;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use setasign\Fpdi\Fpdi;
 
@@ -14,12 +15,53 @@ class AdminController extends Controller
         return view('admin.adminLogin');
     }
 
+    public function dashboard()
+    {
+        return view('admin.dashboard');
+    }
+
+    public function handleLogin(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('admin/dashboard');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/admin');
+    }
+
+    public function home_details()
+    {
+        $details = PdfDetail::latest()->get();
+        return view('admin.home_details', compact('details'));
+    }
+
+    public function home_details_edit_page($id){
+        $details = PdfDetail::find($id)->get();
+        return view("admin.home_details_edit_page", compact('details'));
+    }
+
     public function insert(Request $request)
     {
         $request->validate([
             'imageUpload' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4,mov,avi|max:20480',
             'approved_project' => 'required',
-            'pdf' => 'required|file|mimes:pdf|max:20480', 
+            'pdf' => 'required|file|mimes:pdf|max:20480',
             'password' => 'required',
             'user_id' => 'required',
         ]);
@@ -42,7 +84,7 @@ class AdminController extends Controller
         }
 
         if ($request->hasFile('pdf')) {
-            $pdffile = $request->file('pdf'); 
+            $pdffile = $request->file('pdf');
             $pdffilename = time() . '_' . $pdffile->getClientOriginalName();
 
             $destinationPath = public_path('banner');
@@ -67,17 +109,12 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Data added successfully!');
     }
 
-    public function home_details()
-    {
-        return view('admin.admin_panel');
-    }
-
     public function pdf()
     {
         return view('admin.pdfGenerate');
     }
 
-       public function new_project_details()
+    public function new_project_details()
     {
         return view('admin.new-project-details');
     }

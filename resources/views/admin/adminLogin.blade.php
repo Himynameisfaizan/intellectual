@@ -14,49 +14,50 @@
 <body">
     @include('include.admin_header')
 
-    <main class="absolute top-75 left-70 z-10 w-[75%]">
-        <section id="adminView" class="absolute bg-[#fefefe] max-w-100 mx-auto w-full border border-neutral-300 rounded-lg shadow-lg top-[50%] left-[50%]
-        -translate-y-[50%] -translate-x-[50%] transition-all duration-400">
-            <form class="flex flex-col gap-7 px-8 pb-10 pt-5" onsubmit="showPopup();">
-                <h3 class="text-center font-medium text-2xl mb-5">Admin Verify</h3>
-                <div class="flex flex-col gap-1">
-                    <label for="name" class="font-medium text-sm">Name<span class="text-rose-500 font-medium">*</span></label>
-                    <input type="text" id="name" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                    transition-all duration-200">
+    <main class="absolute top-25 left-70 z-10 w-[75%]">
+        <section class="flex justify-center bg-gray-100 px-4">
+            <div class="max-w-md w-full bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200">
+                <div class="bg-[#003366] p-6 text-center">
+                    <h3 class="text-white font-bold text-2xl uppercase tracking-wider">Admin Portal</h3>
+                    <p class="text-blue-100 text-sm mt-1">Please verify your credentials</p>
                 </div>
-                <div class="flex flex-col gap-1">
-                    <label for="passowrd" class="font-medium text-sm">Password<span class="text-rose-500 font-medium">*</span></label>
-                    <input type="password" id="password" name="password" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                    transition-all duration-200">
-                </div>
-                <input value="Submit" type="submit" class="bg-[#003366] py-1 text-white rounded cursor-pointer hover:bg-[#0c3863] transition-all duration-100">
 
-            </form>
+                <form action="{{ route('admin.login.submit') }}" method="POST" class="p-8 space-y-6">
+                    @csrf
+
+                    @if($errors->any())
+                    <div class="bg-red-50 border-l-4 border-red-500 p-3 mb-4">
+                        <p class="text-red-700 text-sm">{{ $errors->first() }}</p>
+                    </div>
+                    @endif
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-gray-600 flex items-center gap-2">
+                            <i class="ri-mail-line text-[#003366]"></i> Email Address
+                        </label>
+                        <input type="email" name="email" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="admin@example.com">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-gray-600 flex items-center gap-2">
+                            <i class="ri-lock-line text-[#003366]"></i> Password
+                        </label>
+                        <input type="password" name="password" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                            placeholder="••••••••">
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-[#003366] hover:bg-[#0c3863] text-white font-bold py-3 cursor-pointer rounded-lg shadow-lg transform active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
+                        Login to Dashboard <i class="ri-arrow-right-line"></i>
+                    </button>
+                </form>
+            </div>
         </section>
     </main>
 
-    <script>
-        let adminView = document.getElementById("adminView");
-        let projectDetail = document.getElementById("projectDetail");
-        let userPassword = document.getElementById("userPassword");
-
-        function showPopup() {
-            let adminName = "Happy";
-            let adminPass = "1234";
-            let name = document.getElementById("name").value;
-            let password = document.getElementById("password").value;
-
-            if (name === adminName && password === adminPass) {
-                alert("Correct Information");
-                adminView.classList.add("hidden");
-                projectDetail.classList.remove("hidden");
-            } else {
-                alert("Incorrect Information");
-                adminView.classList.remove("hidden");
-                projectDetail.classList.add("hidden");
-            };
-        };
-    </script>
     </body>
 
 </html>

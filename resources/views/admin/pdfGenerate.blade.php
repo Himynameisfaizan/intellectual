@@ -13,12 +13,11 @@
 <body>
 
     @include('include.admin_header')
-    <div class="absolute top-0 left-70 z-10 w-[75%]">
-        <main class="relative w-full mx-auto px-6 flex flex-col items-center justify-center min-h-screen lg-[60vh]
-    mt-10">
+    <div class="absolute top-20 left-70 z-10 w-[75%]">
+        <main class="relative w-full mx-auto flex flex-col items-center justify-center ">
             <section id="projectDetail" class="bg-[#fefefe] max-w-2xl mx-auto w-full border border-neutral-300 rounded-lg shadow-lg ">
                 <h3 class="text-center font-medium text-3xl py-2">Generate pdf</h3>
-                <form class="flex flex-col gap-7 px-8 pb-10 pt-5" action="{{ route('pdf.generate') }}" method="post" enctype="multipart/form-data">
+                <form class="flex flex-col gap-5 px-8 pb-10 pt-3" action="{{ route('pdf.generate') }}" method="post" enctype="multipart/form-data">
                     @csrf
 
                     <div class="flex gap-1 items-center justify-between">

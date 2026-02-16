@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="md:col-span-2 flex justify-end">
-                            <button type="submit" class="bg-[#003366] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#0c3863] active:scale-95 transition shadow-lg flex items-center gap-2">
+                            <button type="submit" class="bg-[#003366] cursor-pointer text-white px-8 py-3 rounded-lg font-bold hover:bg-[#0c3863] active:scale-95 transition shadow-lg flex items-center gap-2">
                                 <i class="ri-save-line"></i> Insert Data
                             </button>
                         </div>
@@ -108,16 +108,21 @@
                                         </a>
                                     </td>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                        <a href="{{ $item->id }}" class="text-blue-500 hover:text-blue-700 underline">
+                                        <a href="{{ route('home_details_edit_page' ,$item->id) }}" class="text-blue-500 hover:text-blue-700 underline">
                                             <i class="ri-edit-2-line"></i>
                                             Edit
                                         </a>
                                     </td>
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                        <a href="{{ $item->id }}" class="text-red-500 hover:text-red-700 underline">
-                                            <i class="ri-delete-bin-line"></i>
-                                            Delete
-                                        </a>
+                                    <td class="px-6 py-4">
+                                        <form id="delete-form-{{ $item->id }}" action="{{ route('delete_detail', $item->id) }}" method="POST" class="hidden">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+
+                                        <button type="button" onclick="showDeletePopup({{ $item->id }})"
+                                            class="text-red-500 hover:text-red-700 flex items-center gap-1 font-medium underline cursor-pointer">
+                                            <i class="ri-delete-bin-line"></i> Delete
+                                        </button>
                                     </td>
 
                                 </tr>
@@ -129,6 +134,40 @@
             </div>
         </main>
     </div>
+
+    <script>
+        function showDeletePopup(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to delete this record!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#003366', // Aapki theme ka color
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                position: 'top-end',
+                toast: false, 
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            })
+        }
+
+        if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: "{{ session('success') }}",
+                timer: 2000,
+                showConfirmButton: false,
+                position: 'top-end',
+                toast: true
+            });
+    </script>
     </body>
 
 </html>

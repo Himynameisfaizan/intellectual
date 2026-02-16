@@ -6,6 +6,7 @@ use App\Models\PdfDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use setasign\Fpdi\Fpdi;
 
 class AdminController extends Controller
@@ -51,9 +52,67 @@ class AdminController extends Controller
         return view('admin.home_details', compact('details'));
     }
 
-    public function home_details_edit_page($id){
-        $details = PdfDetail::find($id)->get();
+    public function home_details_edit_page($id)
+    {
+        $details = PdfDetail::findorFail($id);
         return view("admin.home_details_edit_page", compact('details'));
+    }
+
+    public function deleteDetails($id)
+    {
+        $details = \App\Models\PdfDetail::findOrFail($id);
+
+        if ($details->image_url && file_exists(public_path($details->image_url))) {
+            unlink(public_path($details->image_url));
+        }
+        if ($details->pdf && file_exists(public_path($details->pdf))) {
+            unlink(public_path($details->pdf));
+        }
+
+        $details->delete();
+        return redirect()->back()->with("success", "Record deleted successfully!");
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'approved_project' => 'string|max:255',
+            'password' => 'string',
+            'user_id' => 'string',
+            'imageUpload' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'pdf' => 'nullable|file|mimes:pdf|max:20420',
+        ]);
+
+        $item = PdfDetail::findorFail($id);
+
+        if ($request->hasFile('imageUpload')) {
+            if ($item->image_url && File::exists(public_path($item->image_url))) {
+                File::delete(public_path($item->image_url));
+            }
+
+            $file = $request->file('imageUpload');
+            $filename = time() . "." . $file->getClientOriginalName();
+            $file->move(public_path('banner'), $filename);
+            $item->image_url = 'banner/' . $filename;
+        }
+
+        if ($request->hasFile('pdf')) {
+            if ($item->pdf && File::exists(public_path($item->pdf))) {
+                File::delete(public_path($item->pdf));
+            }
+
+            $pdfFile = $request->file('pdf');
+            $pdffilename = time() . "_upd_" . $pdfFile->getClientOriginalName();
+            $pdfFile->move(public_path('banner'), $pdffilename);
+            $item->pdf = 'banner/' . $pdffilename;
+        }
+
+        $item->approved_projects = $request->approved_project ?? $item->approved_projects;
+        $item->password = $request->password ?? $item->password;
+        $item->user_id = $request->user_id ?? $item->user_id;
+
+        $item->save();
+        return redirect()->route('home_details')->with("You product update successfully");
     }
 
     public function insert(Request $request)
@@ -108,6 +167,7 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Data added successfully!');
     }
+
 
     public function pdf()
     {

@@ -36,9 +36,12 @@ Route::middleware('guest')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/home-details', [AdminController::class, 'home_details'])->name('home_details');
         Route::get('/home-details/{id}', [AdminController::class, 'home_details_edit_page'])->name('home_details_edit_page');
+        Route::delete('/home-details-delete/{id}', [AdminController::class, 'deleteDetails'])->name('delete_detail');
+        Route::put("/home-details-update/{id}", [AdminController::class, 'update'])->name('update_detail');
+
         Route::get('/pdf-generator', [AdminController::class, 'pdf'])->name('pdf');
         Route::post('/generate-pdf', [AdminController::class, 'generate'])->name('pdf.generate');
         Route::post('/insert-details', [AdminController::class, 'insert'])->name('insert');
         Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
-        Route::get('/admin/new-project-details', [AdminController::class, 'new_project_details']);
+        Route::get('/new-project-details', [AdminController::class, 'new_project_details']);
 });

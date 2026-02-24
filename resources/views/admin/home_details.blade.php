@@ -14,7 +14,7 @@
 
     <div class="absolute top-20 left-70 z-10 w-[75%]">
 
-        <main class="px-6 bg-gray-50 min-h-screen">
+        <main class="px-6">
             <div class="max-w-6xl mx-auto space-y-8">
 
                 <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NewProject;
 use App\Models\PdfDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use PhpParser\Node\Expr\New_;
 use setasign\Fpdi\Fpdi;
 
 class AdminController extends Controller
@@ -60,7 +62,7 @@ class AdminController extends Controller
 
     public function deleteDetails($id)
     {
-        $details = \App\Models\PdfDetail::findOrFail($id);
+        $details = PdfDetail::findOrFail($id);
 
         if ($details->image_url && file_exists(public_path($details->image_url))) {
             unlink(public_path($details->image_url));
@@ -176,7 +178,52 @@ class AdminController extends Controller
 
     public function new_project_details()
     {
-        return view('admin.new-project-details');
+        $details = NewProject::get();
+        return view('admin.new-project-details', compact('details'));
+    }
+
+    public function new_project_insert(Request $request)
+    {
+        $request->validate([
+            'new_update' => "required",
+        ]);
+
+        NewProject::create([
+            'new_update' => $request->new_update,
+        ]);
+
+        return redirect()->back()->with("insert successfully");
+    }
+
+    public function new_project_edit($id)
+    {
+        $details = NewProject::findorfail($id);
+
+        return view("admin.new_project_edit", compact("details"));
+    }
+
+    public function new_project_update(Request $request, $id)
+    {
+        $request->validate([
+            'new_update' => "required",
+        ]);
+
+        $update = NewProject::findorfail($id);
+
+        $update->update([
+            'new_update' => $request->new_update,
+        ]);
+
+        return redirect('admin/new-project-details')->with('data updated', 'updated successfully');
+    }
+
+    public function new_project_delete($id)
+    {
+        $details = NewProject::findorfail($id);
+
+        $details->delete();
+
+        return redirect('admin/new-project-details')->with("deleted", "successfully deleted");
     }
 
 

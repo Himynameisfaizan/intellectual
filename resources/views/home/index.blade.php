@@ -74,15 +74,12 @@
         }
     </style>
 
-    <section class="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12 mt-4 pt-[12vh]">
+    <section class="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-20 mt-4 pt-[12vh]">
         <div class="flex flex-col lg:flex-row gap-8 h-auto py-5 lg:h-110">
 
             <div class="w-full lg:w-3/5 relative rounded-xl overflow-hidden shadow-2xl bg-gray-200 group aspect-video lg:aspect-auto">
                 <div class="slider-track flex transition-transform duration-500 ease-out h-full" id="slider-track">
                     @foreach ($imagePaths as $mediaUrl)
-
-                    {{-- Ab yaha check karne ki zaroorat nahi hai ki empty hai ya nahi,
-             kyunki Controller ne pehle hi saaf kar diya hai --}}
 
                     @php
                     $extension = pathinfo($mediaUrl, PATHINFO_EXTENSION);

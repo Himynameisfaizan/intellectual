@@ -44,9 +44,6 @@
                     <a href="{{ route('index') }}" class="block w-full text-lg">Home</a>
                 </li>
                 <li class="w-full text-center hover:bg-[#003366] py-2">
-                    <a href="{{ route('index') }}" class="block w-full text-lg">Approved</a>
-                </li>
-                <li class="w-full text-center hover:bg-[#003366] py-2">
                     <a href="{{ route('about-us') }}" class="block w-full text-lg">About</a>
                 </li>
                 <li class="w-full text-center hover:bg-[#003366] py-2">

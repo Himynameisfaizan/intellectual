@@ -20,7 +20,10 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        return view('admin.dashboard');
+
+        $totalProjects = NewProject::count();
+        $totalCertificates = PdfDetail::where('pdf', 0)->count();
+        return view('admin.dashboard', compact('totalProjects', 'totalCertificates'));
     }
 
     public function handleLogin(Request $request)
@@ -120,7 +123,7 @@ class AdminController extends Controller
     public function insert(Request $request)
     {
         $request->validate([
-            'imageUpload' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4,mov,avi|max:20480',
+            'imageUpload' => 'nullable|file|mimes:jpeg,png,jpg,avif,webp|max:20480',
             'approved_project' => 'required',
             'pdf' => 'required|file|mimes:pdf|max:20480',
             'password' => 'required',

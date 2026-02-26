@@ -44,7 +44,7 @@
                             <td class="p-3 border border-gray-300 text-center">{{ $item['sno'] }}</td>
                             <td class="p-3 border border-gray-300 text-sm font-medium text-gray-700 file-name">{{ $item['approved_projects'] }}</td>
                             <td class="p-3 border border-gray-300 text-center">
-                                <button onclick="openModal()" class="text-red-600 hover:scale-110 transition transform">
+                                <button onclick="openModal({{ $item['id'] }})" class="text-red-600 hover:scale-110 transition transform">
                                     <i class="ri-file-pdf-2-fill text-3xl"></i>
                                 </button>
                             </td>
@@ -69,7 +69,7 @@
                             <td class="p-3 border border-gray-300 text-center">{{ $item['sno'] }}</td>
                             <td class="p-3 border border-gray-300 text-sm font-medium text-gray-700 file-name">{{ $item['approved_projects'] }}</td>
                             <td class="p-3 border border-gray-300 text-center">
-                                <button onclick="openModal()" class="text-red-600 hover:scale-110 transition transform">
+                                <button onclick="openModal({{ $item['id'] }})" class="text-red-600 hover:scale-110 transition transform">
                                     <i class="ri-file-pdf-2-fill text-3xl"></i>
                                 </button>
                             </td>
@@ -118,6 +118,13 @@
                         class="w-full border-b border-gray-300 p-2 outline-none focus:border-blue-600 bg-transparent transition" required>
                     <small class="text-red-500 text-xs hidden" id="idError">This field is required*</small>
                 </div>
+                <input type="hidden" id="selected_pdf_id" name="pdf_id">
+
+                <div class="group">
+                    <input type="password" id="password" name="password" placeholder="Enter PDF Password"
+                        class="w-full border-b border-gray-300 p-2 outline-none focus:border-blue-600 bg-transparent transition" required>
+                    <small class="text-red-500 text-xs hidden" id="passwordError">Incorrect Password*</small>
+                </div>
 
                 <button type="submit" id="submitBtn" class="w-full bg-[#004a94] hover:bg-[#003366] text-white font-medium py-3 rounded-full transition duration-300 mt-4 shadow-md">
                     Submit & Download
@@ -132,7 +139,8 @@
         // --- 1. Modal Logic ---
         const modal = document.getElementById('downloadModal');
 
-        function openModal() {
+        function openModal(id) {
+            document.getElementById('selected_pdf_id').value = id;
             modal.classList.remove('hidden');
         }
 
@@ -179,7 +187,7 @@
                 const response = await fetch("{{ route('check_userId') }}", {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF Protection
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
                     body: formData
                 });
@@ -191,7 +199,8 @@
                     msgBox.className = "text-center text-sm mt-2 text-green-600";
 
                     // Trigger Download
-                    window.location.href = data.download_url;
+                    // window.location.href = data.download_url;
+                    window.open(data.download_url, '_blank');
 
                     // Optional: Close modal after delay
                     setTimeout(closeModal, 2000);

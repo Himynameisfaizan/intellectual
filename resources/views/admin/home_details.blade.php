@@ -1,173 +1,134 @@
-<!DOCTYPE html>
-<html lang="en">
+@include('include.admin_header')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+<div class="max-w-6xl mx-auto space-y-8">
 
-</head>
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-[#003366] px-6 py-4 flex items-center gap-2">
+            <i class="ri-add-circle-line text-white text-xl"></i>
+            <h2 class="text-white font-bold text-lg">Insert New Project Data</h2>
+        </div>
+        <form action="{{ route('insert') }}" method="post" enctype="multipart/form-data" class="p-6">
+            @csrf
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1">
+                    <label class="text-sm font-semibold text-gray-700">Approved Project Name</label>
+                    <input required name="approved_project" type="text" placeholder="e.g. Website Redesign"
+                        class="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50">
+                </div>
 
-<body">
-    @include('include.admin_header')
+                <div class="space-y-1">
+                    <label class="text-sm font-semibold text-gray-700">Project Password</label>
+                    <input required name="password" type="text" placeholder="Access Password"
+                        class="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50">
+                </div>
 
-    <div class="absolute top-20 left-70 z-10 w-[75%]">
+                <div class="space-y-1">
+                    <label class="text-sm font-semibold text-gray-700">User ID</label>
+                    <input required name="user_id" type="text" placeholder="User Reference ID"
+                        class="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50">
+                </div>
 
-        <main class="px-6">
-            <div class="max-w-6xl mx-auto space-y-8">
+                <div class="space-y-1">
+                    <label class="text-sm font-semibold text-gray-700">PDF File</label>
+                    <input required name="pdf" type="file"
+                        class="w-full border border-gray-200 p-2 rounded-xl bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700">
+                </div>
 
-                <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="bg-[#003366] px-6 py-4">
-                        <h2 class="text-white font-semibold text-lg flex items-center gap-2">
-                            <i class="ri-add-circle-line"></i> Insert New Project Data
-                        </h2>
-                    </div>
-
-                    <form action="{{ route('insert') }}" method="post" enctype="multipart/form-data" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        @csrf
-                        <div class="space-y-1">
-                            <label class="text-sm font-medium text-gray-700">Approved Project Name</label>
-                            <input required name="approved_project" type="text" placeholder="e.g. Website Redesign"
-                                class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
-                        </div>
-
-                        <div class="space-y-1">
-                            <label class="text-sm font-medium text-gray-700">Project Password</label>
-                            <input required name="password" type="text" placeholder="Access Password"
-                                class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
-                        </div>
-
-                        <div class="space-y-1">
-                            <label class="text-sm font-medium text-gray-700">User ID</label>
-                            <input required name="user_id" type="text" placeholder="User Reference ID"
-                                class="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
-                        </div>
-
-                        <div class="space-y-1">
-                            <label class="text-sm font-medium text-gray-700">PDF File</label>
-                            <input required name="pdf" type="file"
-                                class="w-full border border-gray-300 p-2 rounded-lg file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        </div>
-
-                        <div class="space-y-1 md:col-span-2">
-                            <label class="text-sm font-medium text-gray-700">Banner/Project Image (Optional)</label>
-                            <input name="imageUpload" type="file"
-                                class="w-full border border-gray-300 p-2 rounded-lg file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
-                        </div>
-
-                        <div class="md:col-span-2 flex justify-end">
-                            <button type="submit" class="bg-[#003366] cursor-pointer text-white px-8 py-3 rounded-lg font-bold hover:bg-[#0c3863] active:scale-95 transition shadow-lg flex items-center gap-2">
-                                <i class="ri-save-line"></i> Insert Data
-                            </button>
-                        </div>
-                    </form>
-                </section>
-
-                <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
-                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                        <h2 class="font-bold text-gray-800 text-lg">Recently Added Data</h2>
-                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full uppercase tracking-wider">Total: {{ $details->count() }}</span>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
-                                    <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Project</th>
-                                    <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Image</th>
-                                    <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">PDF</th>
-                                    <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Edit</th>
-                                    <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                @foreach($details as $item)
-                                <tr class="hover:bg-gray-50 transition">
-                                    <td class="px-6 py-4 text-sm text-gray-600"> {{ $item->created_at->format('d M, Y') }}</td>
-                                    <td class="px-6 py-4">
-                                        <div class="text-sm font-bold text-gray-800">{{ $item->approved_projects }}</div>
-                                        <div class="text-xs flex items-center gap-8 text-gray-400">
-                                            <div>
-                                                UI: {{ $item->user_id }}
-                                            </div>
-                                            <div class="text-xs text-gray-400">PASS: {{ $item->password }}</div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        @if($item->image_url)
-                                        <img src="{{ asset($item->image_url) }}" class="w-12 h-12 rounded object-cover border border-gray-200">
-                                        @else
-                                        <span class="text-gray-400 text-xs italic">No Image</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <a href="{{ asset($item->pdf) }}" target="_blank" class="text-red-500 hover:text-red-700 flex items-center gap-1 font-medium text-sm">
-                                            <i class="ri-file-pdf-2-fill text-lg"></i> View PDF
-                                        </a>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                        <a href="{{ route('home_details_edit_page' ,$item->id) }}" class="text-blue-500 hover:text-blue-700 underline">
-                                            <i class="ri-edit-2-line"></i>
-                                            Edit
-                                        </a>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <form id="delete-form-{{ $item->id }}" action="{{ route('delete_detail', $item->id) }}" method="POST" class="hidden">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-
-                                        <button type="button" onclick="showDeletePopup({{ $item->id }})"
-                                            class="text-red-500 hover:text-red-700 flex items-center gap-1 font-medium underline cursor-pointer">
-                                            <i class="ri-delete-bin-line"></i> Delete
-                                        </button>
-                                    </td>
-
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+                <div class="space-y-1 md:col-span-2">
+                    <label class="text-sm font-semibold text-gray-700">Banner Image (Optional)</label>
+                    <input name="imageUpload" type="file"
+                        class="w-full border border-gray-200 p-2 rounded-xl bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-gray-200 file:text-gray-700">
+                </div>
             </div>
-        </main>
-    </div>
 
-    <script>
-        function showDeletePopup(id) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You want to delete this record!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#003366', // Aapki theme ka color
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!',
-                position: 'top-end',
-                toast: false, 
-                showClass: {
-                    popup: 'animate__animated animate__fadeInDown'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            })
+            <div class="mt-8 flex justify-end">
+                <button type="submit" class="bg-[#003366] text-white px-10 py-3 rounded-xl font-bold hover:bg-[#0c3863] transition shadow-lg flex items-center gap-2 cursor-pointer active:scale-95">
+                    <i class="ri-save-line"></i> Insert Data
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-10">
+        <div class="px-6 py-5 border-b border-gray-50 flex justify-between items-center">
+            <h2 class="font-bold text-gray-800 text-lg">Recently Added Data</h2>
+            <span class="bg-blue-50 text-[#003366] text-xs font-bold px-3 py-1 rounded-full uppercase">Total: {{ $details->count() }}</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50/50 uppercase text-[11px] font-bold text-gray-400">
+                    <tr>
+                        <th class="px-6 py-4">Date</th>
+                        <th class="px-6 py-4">Project Details</th>
+                        <th class="px-6 py-4">Preview</th>
+                        <th class="px-6 py-4">Document</th>
+                        <th class="px-6 py-4 text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @foreach($details as $item)
+                    <tr class="hover:bg-gray-50/50 transition-colors duration-200">
+                        <td class="px-6 py-4 text-xs font-medium text-gray-500 whitespace-nowrap">{{ $item->created_at->format('d M, Y') }}</td>
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-gray-800 text-sm uppercase leading-tight">{{ $item->approved_projects }}</div>
+                            <div class="text-[10px] text-gray-400 mt-1">UI: {{ $item->user_id }} | PASS: {{ $item->password }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            @if($item->image_url)
+                            <img src="{{ asset($item->image_url) }}" class="w-12 h-12 rounded-xl object-cover">
+                            @else
+                            <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center italic text-gray-300">N/A</div>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="{{ asset($item->pdf) }}" target="_blank" class="text-red-500 flex items-center gap-1 font-bold text-[11px] uppercase">
+                                <i class="ri-file-pdf-2-fill text-xl"></i> View PDF
+                            </a>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-center gap-4">
+                                <a href="{{ route('home_details_edit_page' ,$item->id) }}" class="text-blue-500 hover:scale-110"><i class="ri-edit-2-line text-lg"></i></a>
+                                <button onclick="showDeletePopup({{ $item->id }})" class="text-red-400 hover:text-red-600 hover:scale-110"><i class="ri-delete-bin-line text-lg"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <form id="delete-form-{{ $item->id }}" action="{{ route('delete_detail', $item->id) }}" method="POST" class="hidden">
+                        @csrf @method('DELETE')
+                    </form>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<script>
+    function confirmLogout() {
+        if (confirm("Are you really want to logout?")) {
+            document.getElementById('logout-form').submit();
         }
+    }
 
-        if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Deleted!',
-                text: "{{ session('success') }}",
-                timer: 2000,
-                showConfirmButton: false,
-                position: 'top-end',
-                toast: true
-            });
-    </script>
-    </body>
+    function showDeletePopup(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#003366',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        })
+    }
+</script>
+
+</main>
+</div>
+</div>
+</body>
 
 </html>

@@ -15,7 +15,7 @@ Route::get('/certificate', [HomeController::class, 'certificate'])->name('certif
 
 // API/Action Routes
 Route::post('/check-userid', [HomeController::class, 'checkUserId'])->name('check_userId');
-Route::get('/download/{user_id}', [HomeController::class, 'downloadPdf'])->name('download_pdf');
+Route::get('/download/{id}', [HomeController::class, 'downloadPdf'])->name('download_pdf');
 
 // admin
 
@@ -33,6 +33,7 @@ Route::middleware('guest')->group(function () {
 
 // Protected Routes (Login ke baad)
 Route::middleware('auth')->prefix('admin')->group(function () {
+
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
     // home details route
@@ -44,7 +45,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
 
     // new project
-    Route::get('/new-project-details', [AdminController::class, 'new_project_details']);
+    Route::get('/new-project-details', [AdminController::class, 'new_project_details'])->name('new_project_details');
     Route::post("/new_project_insert", [AdminController::class, 'new_project_insert'])->name('new_project_insert');
     Route::get("/new_project_edit/{id}", [AdminController::class, 'new_project_edit'])->name("new_project_edit");
     Route::put("/new_project_update/{id}", [AdminController::class, 'new_project_update'])->name('new_project_update');

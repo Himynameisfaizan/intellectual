@@ -1,101 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
+@include('include.admin_header')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intellectual</title>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+<div class="max-w-4xl mx-auto ">
+    <section id="projectDetail" class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
+        <div class="bg-[#003366] px-6 py-4">
+            <h3 class="text-center font-bold text-white text-2xl flex items-center justify-center gap-2">
+                <i class="ri-file-pdf-2-line"></i> Generate PDF
+            </h3>
+        </div>
 
-<body>
+        <form class="flex flex-col gap-6 px-8 py-10" action="{{ route('pdf.generate') }}" method="post" enctype="multipart/form-data">
+            @csrf
 
-    @include('include.admin_header')
-    <div class="absolute top-20 left-70 z-10 w-[75%]">
-        <main class="relative w-full mx-auto flex flex-col items-center justify-center ">
-            <section id="projectDetail" class="bg-[#fefefe] max-w-2xl mx-auto w-full border border-neutral-300 rounded-lg shadow-lg ">
-                <h3 class="text-center font-medium text-3xl py-2">Generate pdf</h3>
-                <form class="flex flex-col gap-5 px-8 pb-10 pt-3" action="{{ route('pdf.generate') }}" method="post" enctype="multipart/form-data">
-                    @csrf
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-1.5">
+                    <label for="clientName" class="font-semibold text-sm text-gray-700">Client name<span class="text-rose-500">*</span></label>
+                    <input type="text" id="clientName" name="client_name"
+                        class="w-full border border-gray-300 rounded-xl py-3 px-4 focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50"
+                        placeholder="Mr. Shiva Kumar" required>
+                </div>
 
-                    <div class="flex gap-1 items-center justify-between">
-                        <div class="basis-1/2 flex flex-col gap-1">
-                            <label for="clientName" class="font-medium text-sm">Client name<span class="text-rose-500 font-medium">*</span></label>
-                            <input type="text" id="clientName" name="client_name" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                        transition-all duration-200"
-                                placeholder="Mr. Shiva Kumar"
-                                required>
-                        </div>
-                        <div class="basis-1/2 flex flex-col gap-1">
-                            <label for="pdf" class="font-medium text-sm">Company name<span class="text-rose-500 font-medium">*</span></label>
-                            <input type="text" id="pdf" name="company_name" accept="application/pdf" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                        transition-all duration-200"
-                                placeholder="e.g. Do it creation" required>
-                        </div>
+                <div class="flex flex-col gap-1.5">
+                    <label for="company_name" class="font-semibold text-sm text-gray-700">Company name<span class="text-rose-500">*</span></label>
+                    <input type="text" id="company_name" name="company_name"
+                        class="w-full border border-gray-300 rounded-xl py-3 px-4 focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50"
+                        placeholder="e.g. Do it creation" required>
+                </div>
+
+                <div class="flex flex-col gap-1.5 md:col-span-2">
+                    <label for="gst" class="font-semibold text-sm text-gray-700">CIN/GST number<span class="text-rose-500">*</span></label>
+                    <input type="text" id="gst" name="gst_no"
+                        class="w-full border border-gray-300 rounded-xl py-3 px-4 focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50"
+                        placeholder="e.g. U75000UP2025PTC221207" required>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label for="date" class="font-semibold text-sm text-gray-700">Date<span class="text-rose-500">*</span></label>
+                    <input type="date" id="date" name="date"
+                        class="w-full border border-gray-300 rounded-xl py-3 px-4 focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50" required>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label for="logo" class="font-semibold text-sm text-gray-700">Company Logo<span class="text-rose-500">*</span></label>
+                    <input type="file" id="logo" name="logo" accept="image/png, image/jpeg, image/jpg"
+                        class="w-full border border-gray-300 rounded-xl py-2 px-3 focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50 file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
+                </div>
+
+                <div class="flex flex-col gap-1.5 md:col-span-2">
+                    <label for="address" class="font-semibold text-sm text-gray-700">Address<span class="text-rose-500">*</span></label>
+                    <textarea name="address" id="address" rows="3"
+                        class="w-full border border-gray-300 rounded-xl py-3 px-4 focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50"
+                        placeholder="Enter full address..."></textarea>
+                </div>
+
+                <div class="flex flex-col gap-1.5 md:col-span-2">
+                    <label for="userPassword" class="font-semibold text-sm text-gray-700">Generate unique id<span class="text-rose-500">*</span></label>
+                    <div class="flex gap-2">
+                        <input readonly type="text" id="userPassword" name="userPassword"
+                            class="flex-1 border border-gray-300 rounded-xl py-3 px-4 bg-gray-100 text-gray-500 font-mono outline-none"
+                            placeholder="Click button to generate ID" required>
+                        <button type="button" onclick="generateRandomString(10)"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 rounded-xl transition-all" title="Generate ID">
+                            <i class="ri-refresh-line text-xl font-bold"></i>
+                        </button>
                     </div>
-                    <div class="flex flex-col gap-1">
-                        <label for="gst" class="font-medium text-sm">CIN/GST number<span class="text-rose-500 font-medium">*</span></label>
-                        <input type="text" id="gst" name="gst_no" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                    transition-all duration-200"
-                            placeholder="e.g. U75000UP2025PTC221207"
-                            required>
-                    </div>
-                    <div class="flex  gap-1 justify-between items-center">
+                </div>
+            </div>
 
-                        <div class="w-[50%] flex flex-col">
-                            <label for="date" class="font-medium text-sm">Date<span class="text-rose-500 font-medium">*</span></label>
-                            <input type="date" id="date" name="date" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                        transition-all duration-200" required>
-                        </div>
-                        <div class="w-[50%] flex flex-col">
-                            <label for="logo" class="font-medium text-sm">Logo<span class="text-rose-500 font-medium">*</span></label>
-                            <input type="file" id="logo" name="logo" accept="image/png, image/jpeg, image/jpg" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                        transition-all duration-200" required>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label for="address" class="font-medium text-sm">Address<span class="text-rose-500 font-medium">*</span></label>
-                        <textarea name="address" id="address" class="border border-neutral-400 rounded py-0.5 pl-2 focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                    transition-all duration-200"></textarea>
-                    </div>
+            <button type="submit"
+                class="w-full bg-[#003366] py-4 text-white rounded-xl font-bold text-lg active:scale-95 cursor-pointer hover:bg-[#0c3863] transition-all shadow-lg flex items-center justify-center gap-2 mt-4">
+                <i class="ri-download-cloud-2-line"></i> Generate & Download PDF
+            </button>
+        </form>
+    </section>
+</div>
 
-                    <div class="flex flex-col gap-1">
-                        <label for="userPassword" class="font-medium text-sm">Generate unique id<span class="text-rose-500 font-medium">*</span></label>
-                        <div class="flex justify-between gap-1">
-                            <input readonly type="text" id="userPassword" name="userPassword" value="" class="border border-neutral-400 rounded py-0.5 pl-2 
-                        focus:border-blue-400 focus:ring-2 ring-blue-300 outline-none
-                        transition-all duration-200 flex-1"
-                                placeholder="Generate unique id using this button 👉"
-                                required>
-                            <i class="ri-user-settings-line px-2 py-1 border-neutral-400 border rounded bg-neutral-100 
-                        cursor-pointer" title="password Generate" onclick="generateRandomString(10)"></i>
-                        </div>
-                    </div>
-                    <input class="bg-[#003366] py-2 text-white rounded-lg active:scale-99 cursor-pointer hover:bg-[#0c3863] transition-all duration-100" type="submit" value="Generate & download pdf ">
-                </form>
-            </section>
+<script>
+    function generateRandomString(length = 10) {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const randomValues = new Uint8Array(length);
+        window.crypto.getRandomValues(randomValues);
 
-
-        </main>
-    </div>
-    <script>
-        function generateRandomString(length = 10) {
-            const chars =
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-
-            const randomValues = new Uint8Array(length)
-            window.crypto.getRandomValues(randomValues)
-
-            let result = "it_"
-            for (let i = 0; i < length; i++) {
-                result += chars[randomValues[i] % chars.length]
-            }
-
-            userPassword.value = result;
+        let result = "it_";
+        for (let i = 0; i < length; i++) {
+            result += chars[randomValues[i] % chars.length];
         }
-    </script>
+
+        document.getElementById('userPassword').value = result;
+    }
+</script>
+
+</main>
+</div>
+</div>
 </body>
 
 </html>

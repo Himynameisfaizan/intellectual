@@ -15,63 +15,79 @@
     @include('include.header')
 
     <style>
-        @keyframes scrollUp {
+        .new-updates-wrapper {
+            width: 95%;
+            max-width: 1300px;
+            margin: auto;
+            overflow: hidden;
+            padding: 12px 0;
+        }
+
+        .scroll-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* GPU Accelerated Animation */
+        @keyframes dynamic-bounce {
             0% {
-                transform: translateY(100%);
+                transform: translateX(0);
             }
 
             100% {
-                transform: translateY(-100%);
+                transform: translateX(var(--bounce-dist));
             }
-        }
-
-        .animate-scroll-up {
-            animation: scrollUp 15s linear infinite;
-        }
-
-        .animate-scroll-up:hover {
-            animation-play-state: paused;
-        }
-
-        @keyframes move-rtl {
-            from {
-                transform: translateX(100%);
-            }
-
-            to {
-                transform: translateX(-100%);
-            }
-
-        }
-
-        @keyframes move-ltr {
-            from {
-                transform: translateX(-100%);
-            }
-
-            to {
-                transform: translateX(100%);
-            }
-
         }
 
         .bounce-text {
             display: inline-block;
             white-space: nowrap;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-            animation-direction: alternate;
+            will-change: transform;
+            animation: dynamic-bounce var(--speed) linear infinite alternate;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        @media (min-width: 1024px) {
+            .bounce-text {
+                font-size: 16px;
+            }
         }
 
         .bounce-text:hover {
             animation-play-state: paused;
         }
 
-        .scroll-container {
-            overflow: hidden;
-            width: 100%;
-            position: relative;
+        @keyframes scroll-up {
+        0% {
+            top: 100%; /* Shuruat box ke neeche se */
         }
+        100% {
+            top: -60%; 
+        }
+    }
+
+    .animate-scroll-up {
+        position: absolute;
+        width: 100%;
+        animation: scroll-up 10s linear infinite; 
+    }
+
+    .animate-scroll-up:hover {
+        animation-play-state: paused;
+        cursor: pointer;
+    }
+
+    /* List items ki styling thodi saaf dikhne ke liye */
+    .animate-scroll-up li {
+        /* padding: 5px 0; */
+        list-style: none;
+    }
     </style>
 
     <section class="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-20 mt-4 pt-[12vh]">
@@ -131,38 +147,27 @@
         </div>
     </section>
 
-    <section class="bg-gray-100 py-12">
-        <div class="max-w-7xl mx-auto px-4 overflow-hidden">
-            <h1 class="text-3xl font-bold text-[#003366] text-center mb-8 font-sans">New Updates</h1>
-            <div class="relative max-w-6xl m-auto overflow-hidden">
-                <div class="new-update-title whitespace-nowrap animate-scroll-left flex gap-2 items-center">
-                    <div class="flex flex-col gap-4 w-full text-center overflow-hidden">
-                        @foreach ($grouped as $chunk)
-                        @php
-                        $animationName = $loop->iteration % 2 == 0 ? 'move-ltr' : 'move-rtl';
-                        $speed = rand(8, 10) . 's';
-                        @endphp
+    <section class="bg-gray-100 py-8 md:py-12">
+        <div class="max-w-7xl mx-auto px-2">
+            <h1 class="text-2xl md:text-3xl font-bold text-[#003366] text-center mb-6">New Updates</h1>
 
-                        <div class="scroll-container">
-                            <div class="bounce-text"
-                                style="animation-name: {{ $animationName }}; animation-duration: {{ $speed }};">
-
-                                @foreach ($chunk as $item)
-                                <span class="text-sm md:text-base cursor-pointer text-gray-800 hover:text-gray-500 font-medium px-2">
-                                    {{ $item->approved_projects ?? $item->new_update ?? 'Update Title' }}
-                                </span>
-
-                                {{-- Separator (||) --}}
-                                @if (!$loop->last)
-                                <span class="mx-2 text-blue-900 font-bold">||</span>
-                                @endif
-                                @endforeach
-
-                            </div>
+            <div class="new-updates-wrapper">
+                <div class="flex flex-col gap-2">
+                    @foreach ($grouped as $chunk)
+                    <div class="scroll-container">
+                        <div class="bounce-text-element bounce-text px-4"
+                            style="--speed: {{ rand(5, 6) }}s;">
+                            @foreach ($chunk as $item)
+                            <span class="cursor-pointer hover:text-blue-700">
+                                {{ $item->approved_projects ?? $item->new_update ?? 'Update Title' }}
+                            </span>
+                            @if (!$loop->last)
+                            <span class="mx-4 text-blue-900 opacity-40">||</span>
+                            @endif
+                            @endforeach
                         </div>
-
-                        @endforeach
                     </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -638,6 +643,29 @@
                 });
             });
         });
+
+
+        function updateBounceDistance() {
+            const containers = document.querySelectorAll('.scroll-container');
+            containers.forEach(container => {
+                const text = container.querySelector('.bounce-text-element');
+                if (text) {
+                    const containerWidth = container.offsetWidth;
+                    const textWidth = text.offsetWidth;
+
+                    // Agar text container se bada hai tabhi bounce karega
+                    // Formula: Container Width - Text Width
+                    const distance = containerWidth - textWidth;
+
+                    // CSS variable set kar rahe hain
+                    text.style.setProperty('--bounce-dist', `${distance}px`);
+                }
+            });
+        }
+
+        // Load hone par aur window resize hone par distance update karein
+        window.addEventListener('load', updateBounceDistance);
+        window.addEventListener('resize', updateBounceDistance);
     </script>
 
     @include('include.footer')

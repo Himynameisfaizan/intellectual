@@ -76,7 +76,20 @@
                         </td>
                         <td class="px-6 py-4">
                             @if($item->image_url)
+                            @php
+                            // File ki extension nikalne ke liye logic
+                            $extension = pathinfo($item->image_url, PATHINFO_EXTENSION);
+                            $videoExtensions = ['mp4', 'mov', 'mkv', 'webm'];
+                            @endphp
+
+                            @if(in_array(strtolower($extension), $videoExtensions))
+                            <video class="w-12 h-12 rounded-xl object-cover" muted autoplay>
+                                <source src="{{ asset($item->image_url) }}" type="video/{{ $extension }}">
+                                Your browser does not support the video tag.
+                            </video>
+                            @else
                             <img src="{{ asset($item->image_url) }}" class="w-12 h-12 rounded-xl object-cover">
+                            @endif
                             @else
                             <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center italic text-gray-300">N/A</div>
                             @endif

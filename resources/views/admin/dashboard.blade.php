@@ -65,19 +65,48 @@
 
     <div class="mt-12 bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
         <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <i class="ri-pulse-line text-blue-500"></i> System Overview
+            <i class="ri-download-cloud-2-line text-blue-500"></i> Recent Downloads
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <p class="text-xs font-bold text-gray-400 uppercase">Latest Update</p>
-                <p class="text-sm text-gray-700 mt-1 font-medium">Django to Laravel migration complete.</p>
-            </div>
-            <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <p class="text-xs font-bold text-gray-400 uppercase">Server Status</p>
-                <p class="text-sm text-green-600 mt-1 font-bold flex items-center gap-1">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Online
-                </p>
-            </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-xs font-bold text-gray-400 uppercase border-b border-gray-50">
+                        <th class="pb-4 px-4">User Details</th>
+                        <th class="pb-4 px-4">User ID</th>
+                        <th class="pb-4 px-4">Project Downloaded</th>
+                        <th class="pb-4 px-4">Time</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($recentDownloads as $download)
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="py-4 px-4">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-gray-800">{{ $download->user_name }}</span>
+                                <span class="text-xs font-medium text-blue-500">Downloads: {{ $download->phone_no }}</span>
+                            </div>
+                        </td>
+                        <td class="py-4 px-4">
+                            <span class="text-xs font-mono bg-blue-50 text-blue-600 px-2 py-1 rounded-lg">
+                                {{ $download->user_id }}
+                            </span>
+                        </td>
+                        <td class="py-4 px-4">
+                            <p class="text-sm text-gray-700 font-medium">{{ $download->project_name }}</p>
+                        </td>
+                        <td class="py-4 px-4">
+                            <span class="text-xs text-gray-400">
+                                {{ $download->created_at->diffForHumans() }}
+                            </span>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="py-8 text-center text-gray-400 italic">No downloads recorded yet.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

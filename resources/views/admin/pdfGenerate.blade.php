@@ -56,13 +56,9 @@
                 <div class="flex flex-col gap-1.5 md:col-span-2">
                     <label for="userPassword" class="font-semibold text-sm text-gray-700">Generate unique id<span class="text-rose-500">*</span></label>
                     <div class="flex gap-2">
-                        <input readonly type="text" id="userPassword" name="userPassword"
-                            class="flex-1 border border-gray-300 rounded-xl py-3 px-4 bg-gray-100 text-gray-500 font-mono outline-none"
-                            placeholder="Click button to generate ID" required>
-                        <button type="button" onclick="generateRandomString(10)"
-                            class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 rounded-xl transition-all" title="Generate ID">
-                            <i class="ri-refresh-line text-xl font-bold"></i>
-                        </button>
+                        <input type="text" id="userPassword" name="userPassword"
+                            class="flex-1 border border-gray-300 rounded-xl py-3 px-4 font-mono outline-none"
+                            value="CER" required>
                     </div>
                 </div>
             </div>
@@ -74,21 +70,21 @@
         </form>
     </section>
 </div>
-
+<!-- 
 <script>
     function generateRandomString(length = 10) {
         const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         const randomValues = new Uint8Array(length);
         window.crypto.getRandomValues(randomValues);
 
-        let result = "it_";
+        let result = "ipcgv_";
         for (let i = 0; i < length; i++) {
             result += chars[randomValues[i] % chars.length];
         }
 
         document.getElementById('userPassword').value = result;
     }
-</script>
+</script> -->
 
 </main>
 </div>

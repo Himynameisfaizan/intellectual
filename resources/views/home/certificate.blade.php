@@ -102,18 +102,6 @@
                 @csrf
 
                 <div class="group">
-                    <input type="text" id="name" name="name" placeholder="Enter Your Name"
-                        class="w-full border-b border-gray-300 p-2 outline-none focus:border-blue-600 bg-transparent transition" required>
-                    <small class="text-red-500 text-xs hidden" id="nameError">This field is required*</small>
-                </div>
-
-                <div class="group">
-                    <input type="number" id="phone" name="phone" placeholder="Enter Phone Number"
-                        class="w-full border-b border-gray-300 p-2 outline-none focus:border-blue-600 bg-transparent transition" required>
-                    <small class="text-red-500 text-xs hidden" id="phoneError">This field is required*</small>
-                </div>
-
-                <div class="group">
                     <input type="text" id="user_id" name="user_id" placeholder="Enter Your User ID"
                         class="w-full border-b border-gray-300 p-2 outline-none focus:border-blue-600 bg-transparent transition" required>
                     <small class="text-red-500 text-xs hidden" id="idError">This field is required*</small>
@@ -198,12 +186,14 @@
                     msgBox.textContent = "Success! Downloading...";
                     msgBox.className = "text-center text-sm mt-2 text-green-600";
 
-                    // Trigger Download
-                    // window.location.href = data.download_url;
-                    window.open(data.download_url, '_blank');
+                    const link = document.createElement('a');
+                    link.href = data.download_url;
+                    link.setAttribute('download', ''); 
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
 
-                    // Optional: Close modal after delay
-                    setTimeout(closeModal, 2000);
+                    setTimeout(closeModal, 1000);
                 } else {
                     msgBox.textContent = data.message;
                     msgBox.className = "text-center text-sm mt-2 text-red-600";

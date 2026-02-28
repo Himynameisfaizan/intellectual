@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+// Temporary route to get hashed password
+Route::get('/generate-pass', function() {
+    return bcrypt('@ipcgv01#S');
+});
+
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about-us');
 Route::get('/certificate', [HomeController::class, 'certificate'])->name('certificate');

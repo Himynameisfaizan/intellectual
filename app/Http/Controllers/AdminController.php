@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\NewProject;
 use App\Models\PdfDetail;
+use App\Models\UserData;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -20,10 +21,12 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-
         $totalProjects = NewProject::count();
-        $totalCertificates = PdfDetail::where('pdf', 0)->count();
-        return view('admin.dashboard', compact('totalProjects', 'totalCertificates'));
+        $totalCertificates = PdfDetail::where('is_delete', 1)->count();
+
+        $recentDownloads = UserData::latest()->take(5)->get();
+
+        return view('admin.dashboard', compact('totalProjects', 'totalCertificates', 'recentDownloads'));
     }
 
     public function handleLogin(Request $request)
@@ -123,7 +126,7 @@ class AdminController extends Controller
     public function insert(Request $request)
     {
         $request->validate([
-            'imageUpload' => 'nullable|file|mimes:jpeg,png,jpg,avif,webp|max:20480',
+            'imageUpload' => 'nullable|file|mimes:jpeg,png,jpg,avif,webp,mp4,mov,mkv|max:20480',
             'approved_project' => 'required',
             'pdf' => 'required|file|mimes:pdf|max:20480',
             'password' => 'required',
@@ -232,52 +235,94 @@ class AdminController extends Controller
 
     public function generate(Request $request)
     {
-        // 1. Validation
         $request->validate([
             'client_name' => 'required',
             'company_name' => 'required',
             'logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'address' => 'required',
             'gst_no' => 'required',
+            'userPassword' => 'required',
         ]);
 
         $formattedDate = Carbon::parse($request->date ?? now())->format('d F Y');
+        $uniqueID = $request->userPassword;
 
         if (!defined('FPDF_FONTPATH')) {
             define('FPDF_FONTPATH', public_path('fonts/'));
         }
 
         $pdf = new Fpdi();
-        // Font names check karein: Folder mein 'times.php' aur 'timesb.php' hain 
         $pdf->AddFont('MyFont', '', 'times.php');
         $pdf->AddFont('MyFont', 'B', 'Times New Roman - Bold.php');
 
         $templatePath = public_path('storage/images/certificate_template.pdf');
+
+        if (!File::exists($templatePath)) {
+            return back()->with('error', 'Template file not found at: ' . $templatePath);
+        }
+
         $pdf->setSourceFile($templatePath);
         $templateId = $pdf->importPage(1);
         $pdf->AddPage('L', 'A4');
         $pdf->useTemplate($templateId);
 
-        // 2. Logo Alignment (Exact Center)
+
+
+        // --- UNIQUE ID PRINT KARNA (Top Right) ---
+        $pdf->SetTextColor(0, 0, 0); // Thoda gray color rakhte hain unique ID ke liye
+        $pdf->SetFont('MyFont', 'B', 10);   // Chota font size
+        // X=230 (Right side), Y=15 (Top side) - Aap template ke hisaab se adjust kar sakte hain
+        $pdf->SetXY(235, 0);
+        $pdf->Cell(50, 10, 'Certificate ID: ' . $uniqueID, 0, 0, 'R');
+
+
+        // Logo logic
+
+        // if ($request->hasFile('logo')) {
+        //     $logo = $request->file('logo');
+        //     $pdf->Image($logo->getRealPath(), 108, 77, 80, 0, $logo->getClientOriginalExtension());
+        // }
+
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
-            // X = (297-80)/2 = 108.5, Width 80, Height 15 approx as per template [cite: 6]
-            $pdf->Image($logo->getRealPath(), 108, 77, 80, 18, $logo->getClientOriginalExtension());
+            $logoPath = $logo->getRealPath();
+
+            // 1. Image ki original dimensions nikalna
+            list($widthPx, $heightPx) = getimagesize($logoPath);
+
+            // 2. Target box (80mm x 18mm)
+            $maxW = 80;
+            $maxH = 50;
+
+            // 3. Scale factor calculate karna
+            // Hum check karenge ki width wise kitna chota karna hai aur height wise kitna
+            $scale = min($maxW / $widthPx, $maxH / $heightPx);
+
+            // 4. Final dimensions jo aspect ratio maintain rakhengi
+            $finalW = $widthPx * $scale;
+            $finalH = $heightPx * $scale;
+
+            // 5. Centering Logic
+            // Box ke center mein lane ke liye offset nikalna
+            $offsetX = 108 + ($maxW - $finalW) / 2;
+            $offsetY = 70 + ($maxH - $finalH) / 2;
+
+            $pdf->Image($logoPath, $offsetX, $offsetY, $finalW, $finalH, $logo->getClientOriginalExtension());
         }
 
-        // 3. Paragraph Content with <b> tags for bolding
-        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetTextColor(0, 0, 0); // Text ke liye wapas black color
         $lineHeight = 7.5;
         $fontSize = 13.5;
         $width = 250;
 
-        $text = "This is to certify that <b>" . $request->company_name . " (CIN/GST: " . $request->gst_no . ")</b>, under the proprietorship of <b>" . $request->client_name . "</b>, having its registered address at <b>" . $request->address . "</b>, has been granted a <b>Perpetual, Worldwide, and Exclusive licence</b> to use the <b>" . $request->company_name . "</b> logo design created by <b>Do It Creation</b> for all commercial, promotional, and branding purposes, effective from <b>" . $formattedDate . "</b>; this licence permits use across all media and platforms, does not imply <b>trademark registration or ownership</b>, and confirms that <b>Do It Creation</b> retains authorship solely as the original design.";
+        $text = "This is to certify that <b>" . $request->company_name . " (CIN/GST: " . $request->gst_no . "),</b> under the proprietorship of <b>" . $request->client_name . ",</b> having its registered address at <b>" . $request->address . ",</b> has been granted a <b>Perpetual, Worldwide, and Exclusive licence</b> to use the <b>" . $request->company_name . "</b> logo design created by <b>Do It Creation</b> for all commercial, promotional, and branding purposes, effective from <b>" . $formattedDate . ";</b> this licence permits use across all media and platforms, does not imply <b>trademark registration or ownership,</b> and confirms that <b>Do It Creation</b> retains authorship solely as the original design.";
 
-        // Position Set karein
-        $pdf->SetXY(22, 105); // Left margin approx 40mm se start
-
-        // --- CALL HELPER FUNCTION ---
+        $pdf->SetXY(22, 115);
         $this->MultiCellCenteredBold($pdf, $width, $lineHeight, $text, $fontSize);
+
+        if (file_exists(public_path('images/transparent.png'))) {
+            $pdf->Image(public_path('images/transparent.png'), 0, 0, 297, 210, 'PNG');
+        }
 
         return response($pdf->Output('S'), 200)
             ->header('Content-Type', 'application/pdf')

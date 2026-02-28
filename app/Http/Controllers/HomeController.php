@@ -132,42 +132,87 @@ class HomeController extends Controller
         return view('home.certificate', compact('oddName', 'evenName'));
     }
 
+    // public function checkUserId(Request $request)
+    // {
+    //     try {
+    //         $pdfId = $request->input('pdf_id');
+    //         $nameInput = trim($request->input('name'));
+    //         $phoneInput = trim($request->input('phone'));
+    //         $userIdInput = trim($request->input('user_id'));
+    //         $passwordInput = trim($request->input('password'));
+
+    //         $pdfDetail = PdfDetail::find($pdfId);
+    //         if (!$pdfDetail) {
+    //             return response()->json(["status" => "error", "message" => "Invalid PDF Selection!"]);
+    //         }
+
+    //         if ($pdfDetail->password !== $passwordInput) {
+    //             return response()->json(["status" => "error", "message" => "Invalid Password!"]);
+    //         }
+
+    //         if ($pdfDetail->user_id !== $userIdInput) {
+    //             return response()->json(["status" => "error", "message" => "Invalid User ID!"]);
+    //         }
+
+    //         $existingUser = UserData::where('phone_no', $phoneInput)->first();
+
+    //         if ($existingUser) {
+    //             if ($existingUser->user_name !== $nameInput) {
+    //                 return response()->json(["status" => "error", "message" => "Invalid Name for this phone number!"]);
+    //             }
+    //             if ($existingUser->user_id !== $userIdInput) {
+    //                 return response()->json(["status" => "error", "message" => "User ID mismatch for this record!"]);
+    //             }
+    //         } else {
+    //             UserData::create([
+    //                 'user_id' => $userIdInput,
+    //                 'user_name' => $nameInput,
+    //                 'phone_no' => $phoneInput,
+    //                 'project_name' => $pdfDetail->approved_projects
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             "status" => "success",
+    //             "message" => "Verified!",
+    //             "download_url" => route('download_pdf', ['id' => $pdfId])
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return response()->json(["status" => "error", "message" => "Server Error: " . $e->getMessage()]);
+    //     }
+    // }
+
+
     public function checkUserId(Request $request)
     {
         try {
             $pdfId = $request->input('pdf_id');
-            $nameInput = trim($request->input('name'));
-            $phoneInput = trim($request->input('phone'));
             $userIdInput = trim($request->input('user_id'));
             $passwordInput = trim($request->input('password'));
 
+            // 1. PDF details verify karein
             $pdfDetail = PdfDetail::find($pdfId);
-            if (!$pdfDetail) {
-                return response()->json(["status" => "error", "message" => "Invalid PDF Selection!"]);
+            if (!$pdfDetail || $pdfDetail->password !== $passwordInput || $pdfDetail->user_id !== $userIdInput) {
+                return response()->json(["status" => "error", "message" => "Invalid Credentials!"]);
             }
 
-            if ($pdfDetail->password !== $passwordInput) {
-                return response()->json(["status" => "error", "message" => "Invalid Password!"]);
-            }
-
-            if ($pdfDetail->user_id !== $userIdInput) {
-                return response()->json(["status" => "error", "message" => "Invalid User ID!"]);
-            }
-
-            $existingUser = UserData::where('phone_no', $phoneInput)->first();
+            // 2. UserData check karein (Sirf UserId aur Project Name ke base par)
+            $existingUser = UserData::where('user_id', $userIdInput)
+                ->where('project_name', $pdfDetail->approved_projects)
+                ->first();
 
             if ($existingUser) {
-                if ($existingUser->user_name !== $nameInput) {
-                    return response()->json(["status" => "error", "message" => "Invalid Name for this phone number!"]);
-                }
-                if ($existingUser->user_id !== $userIdInput) {
-                    return response()->json(["status" => "error", "message" => "User ID mismatch for this record!"]);
-                }
+                // Agar user pehle se hai, toh sirf download count (phone_no column) badhayein
+                $currentCount = (int)$existingUser->phone_no ?: 1;
+                $existingUser->update([
+                    'phone_no' => $currentCount + 1
+                ]);
             } else {
+                // Pehli baar download ho raha hai
                 UserData::create([
                     'user_id' => $userIdInput,
-                    'user_name' => $nameInput,
-                    'phone_no' => $phoneInput,
+                    'user_name' => 'Verified User',
+                    'phone_no' => '1',
                     'project_name' => $pdfDetail->approved_projects
                 ]);
             }
@@ -192,9 +237,6 @@ class HomeController extends Controller
             return response("File not found on server at: " . $filePath, 404);
         }
 
-        return response()->file($filePath, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $pdfDetail->approved_projects . '.pdf"'
-        ]);
+        return response()->download($filePath, $pdfDetail->approved_projects . '.pdf');
     }
 }
